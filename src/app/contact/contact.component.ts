@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService} from '../data.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-contact',
@@ -8,20 +8,28 @@ import { DataService} from '../data.service';
 })
 export class ContactComponent implements OnInit {
 
-  myString : Object;
-  myFlag : boolean = false;
+  messageForm: FormGroup;
+  submitted = false;
+  success = false;
 
-  constructor(private myRest : DataService) { }
+  constructor(private formBuilder: FormBuilder) {
+    this.messageForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      message: ['', Validators.required]
+    })
+   }
+
+   onSubmit(){
+     this.submitted = true;
+     if(this.messageForm.invalid){
+       return;
+     }
+     this.success = true;
+   }
 
   ngOnInit() {
-    this.myRest.callMyRestApp().subscribe( myRest =>
-      this.myString = myRest
-    );
-    console.log(this.myString);
   }
 
-  onClickOf(){
-    this.myFlag = true
-  }
+  
 
 }
